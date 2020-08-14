@@ -40,24 +40,36 @@ renderCards(){
     description:
       'Owner/creator of the contract',
     meta: 'MANAGER',
+    color: 'red',
+    centered: true,
+    style:{overflowWrap: 'break-word'},
   },
   {
     header: '0.5 ETH',
     description:
       'Minimum contribution to participate in the lottery',
     meta: 'Minimum Contribution',
+    color: 'blue',
+    centered: true,
+    style:{overflowWrap: 'break-word'},
   },
   {
     header: this.state.players.length,
     description:
       'Tolal number of players in the Lottery',
     meta: 'total participants',
+    color: 'yellow',
+    centered: true,
+    style:{overflowWrap: 'break-word'},
   },
   {
     header: web3.utils.fromWei(this.state.balance,'ether'),
     description:
       'Total money in the lottery',
     meta: 'Winning amount',
+    color: 'blue',
+    centered: true,
+    style:{overflowWrap: 'break-word'},
   },
 ]
 return <Card.Group items={items} /> ;
@@ -76,6 +88,15 @@ onSubmit = async event =>{
 
 };
 
+onClick = async() =>{
+  const accounts = await web3.eth.getAccounts();
+  this.setState({message: 'waiting for transaction success ...'});
+  await lottery.methods.pickWinner().send({
+    from: accounts[0]
+  });
+  this.setState({message: 'Winner has been picked...'});
+  window.location.reload(false);
+}
 
 
 
@@ -99,8 +120,15 @@ onSubmit = async event =>{
       </Form>
       </Card>
       </Container>
-
       </p>
+      <Container style = {{marginTop: '30px'}}>
+      <Card centered = {true} color = 'Yellow' fluid = {true}>
+      <p><h2 align = 'center' color = 'blue'> Ready to pick a winner ? </h2></p>
+      <Button type ='submit' positive = {true} fluid ={true} onClick = {this.onClick}>Pick a Winner!
+      </Button>
+      <h5>{this.state.message}</h5>
+      </Card>
+      </Container>
 
     </div>
   );
